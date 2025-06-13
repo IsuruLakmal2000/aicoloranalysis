@@ -1,0 +1,160 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
+
+import '../models/color_analysis.dart';
+import '../models/color_meaning.dart';
+import '../models/color_palette.dart';
+
+class GeminiService {
+  late final GenerativeModel _model;
+
+  GeminiService() {
+    final apiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
+    if (apiKey.isEmpty) {
+      throw Exception('GEMINI_API_KEY not found in environment variables');
+    }
+    
+    // Use Gemini 1.5 Flash - supports both text and vision in one model
+    _model = GenerativeModel(
+      model: 'gemini-1.5-flash',
+      apiKey: apiKey,
+    );
+  }
+
+  // Analyze selfie and generate personal color type
+  Future<ColorAnalysis> analyzePersonalColorType(Uint8List imageBytes) async {
+    try {
+      final prompt = '''
+        Analyze the user's selfie and return their seasonal color type, 
+        matching color palette (in HEX), and styling advice. 
+        Respond in JSON format with the following structure:
+        {
+          "season_type": "Summer", 
+          "primary_colors": ["#E3DFFF", "#BFD4E7", "#A1C2DD"],
+          "description": "You belong to the Summer season, best suited for cool, soft colors. These enhance your calm and elegant tone.",
+          "style_tips": ["Pastel shades look great on you.", "Avoid harsh blacks or bright oranges."]
+        }
+      ''';
+
+      final content = [
+        Content.text(prompt),
+        Content.data('image/jpeg', imageBytes),
+      ];
+
+      final response = await _model.generateContent(content);
+      final responseText = response.text;
+      
+      if (responseText == null) {
+        throw Exception('Empty response from Gemini API');
+      }
+
+      // Parse the JSON string within the response
+      final jsonStart = responseText.indexOf('{');
+      final jsonEnd = responseText.lastIndexOf('}') + 1;
+      
+      if (jsonStart == -1 || jsonEnd == 0 || jsonEnd <= jsonStart) {
+        throw Exception('Invalid JSON response from Gemini API');
+      }
+      
+      final jsonString = responseText.substring(jsonStart, jsonEnd);
+      final Map<String, dynamic> jsonResponse = json.decode(jsonString);
+
+      return ColorAnalysis.fromJson(jsonResponse);
+    } catch (e) {
+      throw Exception('Failed to analyze color type: $e');
+    }
+  }
+
+  // Generate color palette from image
+  Future<ColorPalette> generatePaletteFromImage(Uint8List imageBytes) async {
+    try {
+      final prompt = '''
+        Generate a beautiful color palette based on this image and return 
+        color swatches in HEX with style context. 
+        Respond in JSON format with the following structure:
+        {
+          "name": "Ocean Breeze",
+          "colors": ["#A4C2F4", "#D0E0E3", "#76A5AF", "#3D85C6", "#E6F3FF"],
+          "description": "A refreshing palette inspired by coastal elements.",
+          "mood": "Calm and serene",
+          "usage_tips": ["Perfect for bathroom decor", "Works well for a coastal-themed website"]
+        }
+      ''';
+
+      final content = [
+        Content.text(prompt),
+        Content.data('image/jpeg', imageBytes),
+      ];
+
+      final response = await _model.generateContent(content);
+      final responseText = response.text;
+      
+      if (responseText == null) {
+        throw Exception('Empty response from Gemini API');
+      }
+
+      // Parse the JSON string within the response
+      final jsonStart = responseText.indexOf('{');
+      final jsonEnd = responseText.lastIndexOf('}') + 1;
+      
+      if (jsonStart == -1 || jsonEnd == 0 || jsonEnd <= jsonStart) {
+        throw Exception('Invalid JSON response from Gemini API');
+      }
+      
+      final jsonString = responseText.substring(jsonStart, jsonEnd);
+      final Map<String, dynamic> jsonResponse = json.decode(jsonString);
+
+      return ColorPalette.fromJson(jsonResponse);
+    } catch (e) {
+      throw Exception('Failed to generate color palette: $e');
+    }
+  }
+  
+  // Get color psychology insights
+  Future<ColorMeaning> getColorPsychology(String colorHex) async {
+    try {
+      final prompt = '''
+        Analyze the psychology and meaning behind the color $colorHex.
+        Respond in JSON format with the following structure:
+        {
+          "color_name": "Cerulean Blue",
+          "hex_code": "$colorHex",
+          "short_description": "A calm and soothing blue with hints of green.",
+          "psychological_effects": "Promotes relaxation and tranquility. Associated with clarity and communication.",
+          "cultural_associations": "In many Western cultures, blue represents trust and dependability. In Eastern cultures like China, blue is associated with immortality.",
+          "common_uses": ["Corporate branding for trust", "Spa and wellness products", "Tech interfaces for user comfort"]
+        }
+      ''';
+
+      final response = await _model.generateContent([Content.text(prompt)]);
+      final responseText = response.text;
+      
+      if (responseText == null) {
+        throw Exception('Empty response from Gemini API');
+      }
+
+      // Parse the JSON string within the response
+      final jsonStart = responseText.indexOf('{');
+      final jsonEnd = responseText.lastIndexOf('}') + 1;
+      
+      if (jsonStart == -1 || jsonEnd == 0 || jsonEnd <= jsonStart) {
+        throw Exception('Invalid JSON response from Gemini API');
+      }
+      
+      final jsonString = responseText.substring(jsonStart, jsonEnd);
+      final Map<String, dynamic> jsonResponse = json.decode(jsonString);
+      
+      // Add the hex code to the response if it's not already there
+      if (!jsonResponse.containsKey('hex_code')) {
+        jsonResponse['hex_code'] = colorHex;
+      }
+
+      return ColorMeaning.fromJson(jsonResponse);
+    } catch (e) {
+      throw Exception('Failed to get color psychology: $e');
+    }
+  }
+}
