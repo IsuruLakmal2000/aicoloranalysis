@@ -2,28 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Elegant Color Palette for Fashion-Conscious Women
-  static const Color primaryColor = Color(0xFFF4C2C2); // Soft blush pink
-  static const Color secondaryColor = Color(0xFFE6D7F2); // Muted lavender
-  static const Color accentColor = Color(0xFFE8A87C); // Warm nude/coral
-  static const Color backgroundColor = Color(0xFFFAF9F7); // Creamy white
-  static const Color surfaceColor = Color(0xFFFFFFFF); // Pure white
+  // Color Palette - Warm, Elegant & Feminine
+  static const Color primaryColor = Color(0xFFDA627D); // Warm rose - interactive elements
+  static const Color secondaryColor = Color(0xFFFFA5AB); // Light coral pink - secondary elements
+  static const Color accentColor = Color(0xFFDA627D); // Warm rose - accents
+  static const Color backgroundColor = Color(0xFFF9DBBD); // Soft cream - primary background
+  static const Color surfaceColor = Color(0xFFFFFFFF); // Pure white - cards/surfaces
   
-  // Accent colors for highlights and buttons
-  static const Color goldAccent = Color(0xFFD4AF37); // Elegant gold
-  static const Color roseGoldAccent = Color(0xFFE8B4B8); // Rose gold
-  static const Color coralAccent = Color(0xFFFF7F7F); // Soft coral
-  static const Color deepMauve = Color(0xFF8E4B8E); // Deep mauve for CTAs
-  static const Color strongMauve = Color(0xFF9C4D9C); // Stronger mauve for better visibility
+  // Button and interaction colors
+  static const Color goldAccent = Color(0xFFDA627D); // Warm rose for highlights
+  static const Color roseGoldAccent = Color(0xFFFFA5AB); // Light coral pink
+  static const Color coralAccent = Color(0xFFFFA5AB); // Light coral pink
+  static const Color deepMauve = Color(0xFFA53860); // Deep magenta - primary buttons
+  static const Color strongMauve = Color(0xFFA53860); // Deep magenta - strong actions
   
   // Text colors
-  static const Color textPrimaryColor = Color(0xFF4A4A4A); // Soft charcoal
-  static const Color textSecondaryColor = Color(0xFF8B8B8B); // Medium gray
-  static const Color textLightColor = Color(0xFFB8B8B8); // Light gray
+  static const Color textPrimaryColor = Color(0xFF450920); // Dark plum - primary text
+  static const Color textSecondaryColor = Color(0xFFA53860); // Deep magenta - secondary text
+  static const Color textLightColor = Color(0xFFDA627D); // Warm rose - disabled/light text
   
   // Additional palette
-  static const Color softPurple = Color(0xFFF0E6F7); // Very light lavender
-  static const Color warmBeige = Color(0xFFF5F0E8); // Warm neutral
+  static const Color softPurple = Color(0xFFFFA5AB); // Light coral pink - backgrounds
+  static const Color warmBeige = Color(0xFFF9DBBD); // Soft cream - neutral areas
   
   // Elegant shadow with subtle warmth
   static final BoxShadow softShadow = BoxShadow(
@@ -126,14 +126,14 @@ class AppTheme {
       
       // AppBar with clean, minimal styling
       appBarTheme: AppBarTheme(
-        backgroundColor: backgroundColor,
+        backgroundColor: Color(0xFFF9DBBD), // Soft cream background
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: textPrimaryColor),
+        iconTheme: const IconThemeData(color: Color(0xFF450920)), // Dark plum icons
         titleTextStyle: GoogleFonts.poppins(
           fontSize: 20,
           fontWeight: FontWeight.w500,
-          color: textPrimaryColor,
+          color: Color(0xFF450920), // Dark plum title
           letterSpacing: -0.25,
         ),
         toolbarHeight: 60,
@@ -142,7 +142,7 @@ class AppTheme {
       // Elegant button themes
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: deepMauve,
+          backgroundColor: Color(0xFFA53860), // Deep magenta default
           foregroundColor: surfaceColor,
           elevation: 0,
           shadowColor: Colors.transparent,
@@ -155,13 +155,24 @@ class AppTheme {
             fontWeight: FontWeight.w500,
             letterSpacing: 0.25,
           ),
+        ).copyWith(
+          // Hover and pressed states
+          backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+            if (states.contains(MaterialState.hovered)) {
+              return Color(0xFFDA627D); // Warm rose on hover
+            }
+            if (states.contains(MaterialState.pressed)) {
+              return Color(0xFF450920); // Dark plum when pressed
+            }
+            return Color(0xFFA53860); // Deep magenta default
+          }),
         ),
       ),
       
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: deepMauve,
-          side: BorderSide(color: deepMauve.withOpacity(0.5), width: 1.5),
+          foregroundColor: Color(0xFFA53860), // Deep magenta text
+          side: BorderSide(color: Color(0xFFA53860).withOpacity(0.5), width: 1.5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -176,7 +187,7 @@ class AppTheme {
       
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: deepMauve,
+          foregroundColor: Color(0xFFA53860), // Deep magenta text
           textStyle: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w500,
@@ -198,42 +209,42 @@ class AppTheme {
       
       // Modern color scheme
       colorScheme: ColorScheme.light(
-        primary: primaryColor,
-        secondary: secondaryColor,
-        tertiary: accentColor,
+        primary: Color(0xFFA53860), // Deep magenta - primary actions
+        secondary: Color(0xFFFFA5AB), // Light coral pink - secondary elements
+        tertiary: Color(0xFFDA627D), // Warm rose - tertiary elements
         surface: surfaceColor,
-        background: backgroundColor,
+        background: Color(0xFFF9DBBD), // Soft cream background
         onPrimary: surfaceColor,
-        onSecondary: textPrimaryColor,
+        onSecondary: Color(0xFF450920), // Dark plum on secondary
         onTertiary: surfaceColor,
-        onSurface: textPrimaryColor,
-        onBackground: textPrimaryColor,
+        onSurface: Color(0xFF450920), // Dark plum on surface
+        onBackground: Color(0xFF450920), // Dark plum on background
         error: const Color(0xFFE57373), // Soft red
         onError: surfaceColor,
-        outline: textLightColor,
-        surfaceVariant: softPurple,
-        onSurfaceVariant: textSecondaryColor,
+        outline: Color(0xFFDA627D), // Warm rose outlines
+        surfaceVariant: Color(0xFFFFA5AB).withOpacity(0.2), // Light coral tint
+        onSurfaceVariant: Color(0xFFA53860), // Deep magenta on surface variant
       ),
       
       // Input decoration theme
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: softPurple.withOpacity(0.3),
+        fillColor: Color(0xFFFFA5AB).withOpacity(0.15), // Light coral pink fill
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: primaryColor.withOpacity(0.3)),
+          borderSide: BorderSide(color: Color(0xFFDA627D).withOpacity(0.4)), // Warm rose border
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: deepMauve, width: 2),
+          borderSide: BorderSide(color: Color(0xFFA53860), width: 2), // Deep magenta focus
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         hintStyle: GoogleFonts.poppins(
-          color: textLightColor,
+          color: Color(0xFFDA627D), // Warm rose for hints
           fontSize: 14,
           fontWeight: FontWeight.w400,
         ),
@@ -241,13 +252,13 @@ class AppTheme {
       
       // Icon theme
       iconTheme: const IconThemeData(
-        color: textSecondaryColor,
+        color: Color(0xFFA53860), // Deep magenta for icons
         size: 24,
       ),
       
       // Divider theme
       dividerTheme: DividerThemeData(
-        color: textLightColor.withOpacity(0.3),
+        color: Color(0xFFDA627D).withOpacity(0.3), // Warm rose dividers
         thickness: 0.5,
         space: 1,
       ),

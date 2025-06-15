@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/color_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/chat_bubble.dart';
-import '../widgets/soft_button.dart';
 import '../widgets/soft_card.dart';
 
 class ColorPsychologyScreen extends StatefulWidget {
@@ -58,9 +57,7 @@ class _ColorPsychologyScreenState extends State<ColorPsychologyScreen> {
             ),
             backgroundColor: Colors.transparent,
             elevation: 0,
-            iconTheme: const IconThemeData(
-              color: AppTheme.textPrimaryColor,
-            ),
+            automaticallyImplyLeading: false, // Remove back button
             actions: [
               if (meaning != null)
                 IconButton(
@@ -159,10 +156,25 @@ class _ColorPsychologyScreenState extends State<ColorPsychologyScreen> {
                               style: const TextStyle(color: Colors.red),
                             ),
                             const SizedBox(height: 16),
-                            SoftButton(
+                            ElevatedButton(
                               onPressed: () => _getColorMeaning(),
-                              child: const Text('Try Again'),
-                              backgroundColor: AppTheme.accentColor,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppTheme.accentColor,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                elevation: 3,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                'Try Again',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -278,11 +290,26 @@ class _ColorPsychologyScreenState extends State<ColorPsychologyScreen> {
                   if (!isLoading && meaning == null)
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0),
-                      child: SoftButton(
+                      child: ElevatedButton(
                         onPressed: () => _getColorMeaning(),
-                        child: const Text('Get Color Meaning'),
-                        backgroundColor: AppTheme.accentColor,
-                        width: double.infinity,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.accentColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          elevation: 3,
+                          minimumSize: const Size(double.infinity, 56),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Get Color Meaning',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
                       ),
                     ),
                     
@@ -290,13 +317,28 @@ class _ColorPsychologyScreenState extends State<ColorPsychologyScreen> {
                   if (meaning != null && !isLoading)
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0),
-                      child: SoftButton(
+                      child: ElevatedButton(
                         onPressed: () {
                           colorProvider.resetCurrentMeaning();
                         },
-                        child: const Text('Try Another Color'),
-                        backgroundColor: AppTheme.accentColor,
-                        width: double.infinity,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.accentColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          elevation: 3,
+                          minimumSize: const Size(double.infinity, 56),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Try Another Color',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
                       ),
                     ),
                 ],

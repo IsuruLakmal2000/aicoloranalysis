@@ -26,7 +26,7 @@ class ChatBubble extends StatelessWidget {
         decoration: BoxDecoration(
           color: isUser 
               ? Theme.of(context).colorScheme.primary.withOpacity(0.8)
-              : Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+              : Theme.of(context).colorScheme.secondary.withOpacity(0.5),
           borderRadius: BorderRadius.circular(20).copyWith(
             bottomRight: isUser ? const Radius.circular(0) : null,
             bottomLeft: !isUser ? const Radius.circular(0) : null,

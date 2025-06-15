@@ -6,7 +6,6 @@ import '../models/color_meaning.dart';
 import '../models/color_palette.dart';
 import '../providers/color_provider.dart';
 import '../theme/app_theme.dart';
-import '../widgets/soft_button.dart';
 import '../widgets/soft_card.dart';
 
 class CollectionScreen extends StatefulWidget {
@@ -42,9 +41,7 @@ class _CollectionScreenState extends State<CollectionScreen> with SingleTickerPr
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: const IconThemeData(
-          color: AppTheme.textPrimaryColor,
-        ),
+        automaticallyImplyLeading: false, // Remove back button
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppTheme.textPrimaryColor,

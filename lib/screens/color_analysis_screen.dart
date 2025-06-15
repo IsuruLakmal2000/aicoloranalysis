@@ -73,6 +73,7 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
                 pinned: true,
                 backgroundColor: AppTheme.backgroundColor,
                 elevation: 0,
+                automaticallyImplyLeading: false, // Remove back button
                 flexibleSpace: FlexibleSpaceBar(
                   title: Text(
                     'Personal Color Analysis',
@@ -266,83 +267,201 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Take a selfie in natural daylight for the most accurate color analysis. Face the light source directly and ensure your face is clearly visible.',
+                        'Take a clear selfie in natural daylight for accurate color analysis. Your face should be clearly visible and well-lit.',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: AppTheme.textSecondaryColor,
                               height: 1.5,
                             ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 32),
-                      Column(
-                        children: [
-                          SoftButton(
-                            height: 60.0,
-                            onPressed: () => _pickImageFromCamera(),
-                            backgroundColor: AppTheme.strongMauve,
-                            textColor: Colors.white,
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                      const SizedBox(height: 16),
+                      // Add helpful guidelines
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
                               children: [
-                                Icon(Icons.camera_alt_outlined, size: 24, color: Colors.white),
-                                SizedBox(width: 12),
-                                Text(
-                                  'Take Photo',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  color: AppTheme.strongMauve,
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Face clearly visible and well-lit',
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: AppTheme.textSecondaryColor,
+                                        ),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          SoftButton(
-                            height: 60.0,
-                            onPressed: _pickImage,
-                            backgroundColor: AppTheme.primaryColor,
-                            textColor: AppTheme.textPrimaryColor,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            const SizedBox(height: 8),
+                            Row(
                               children: [
-                                Icon(Icons.photo_library_outlined, size: 24, color: AppTheme.textPrimaryColor),
-                                const SizedBox(width: 12),
-                                Text(
-                                  'Choose from Gallery',
-                                  style: TextStyle(
-                                    color: AppTheme.textPrimaryColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  color: AppTheme.strongMauve,
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Natural daylight or good lighting',
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: AppTheme.textSecondaryColor,
+                                        ),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  color: AppTheme.strongMauve,
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'No sunglasses or face coverings',
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: AppTheme.textSecondaryColor,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
+                      const SizedBox(height: 32),
+                      if (_imageBytes == null) // Only show buttons when no image is selected
+                        Column(
+                          children: [
+                            SoftButton(
+                              height: 60.0,
+                              onPressed: () => _pickImageFromCamera(),
+                              backgroundColor: AppTheme.strongMauve,
+                              textColor: Colors.white,
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.camera_alt_outlined, size: 24, color: Colors.white),
+                                  SizedBox(width: 12),
+                                  Text(
+                                    'Take Photo',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            SoftButton(
+                              height: 60.0,
+                              onPressed: _pickImage,
+                              backgroundColor: AppTheme.primaryColor,
+                              textColor: AppTheme.textPrimaryColor,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.photo_library_outlined, size: 24, color: AppTheme.textPrimaryColor),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    'Choose from Gallery',
+                                    style: TextStyle(
+                                      color: AppTheme.textPrimaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       if (_imageBytes != null) ...[
                         const SizedBox(height: 24),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
+                        Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: AppTheme.primaryColor.withOpacity(0.3),
+                                  width: 1,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.memory(
-                              _imageBytes!,
-                              height: 200,
-                              width: 200,
-                              fit: BoxFit.cover,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.memory(
+                                  _imageBytes!,
+                                  height: 250,
+                                  width: 250,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
-                          ),
+                            Positioned(
+                              bottom: 10,
+                              right: 10,
+                              child: GestureDetector(
+                                onTap: _showImageSourceSelection,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.deepMauve.withOpacity(0.9),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.photo_camera,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        'Change Photo',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 24),
                         SoftButton(
@@ -422,7 +541,7 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Our AI is carefully analyzing your skin tone, hair color, and eye color to determine your perfect color palette.',
+                    'Our AI is validating your photo and analyzing your skin tone, hair color, and eye color to determine your perfect color palette.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppTheme.textSecondaryColor,
                           height: 1.5,
@@ -440,6 +559,9 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
 
   // Error section with retry option
   Widget _buildErrorSection(String? errorMessage) {
+    // Check if this is a face detection error
+    final isFaceError = errorMessage?.contains('Please upload a clear photo of your face') == true;
+    
     return SoftCard(
       backgroundColor: Colors.white,
       child: Container(
@@ -448,21 +570,21 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
         child: Column(
           children: [
             Container(
-              width: 60,
-              height: 60,
+              width: 80,
+              height: 80,
               decoration: BoxDecoration(
-                color: Colors.red.shade50,
+                color: isFaceError ? Colors.amber.shade50 : Colors.red.shade50,
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.error_outline,
-                size: 30,
-                color: Colors.red.shade400,
+                isFaceError ? Icons.face_retouching_natural : Icons.error_outline,
+                size: 40,
+                color: isFaceError ? Colors.amber.shade600 : Colors.red.shade400,
               ),
             ),
             const SizedBox(height: 24),
             Text(
-              'Analysis Failed',
+              isFaceError ? 'Face Not Detected' : 'Analysis Failed',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: AppTheme.textPrimaryColor,
                     fontWeight: FontWeight.w600,
@@ -477,26 +599,95 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
                   ),
               textAlign: TextAlign.center,
             ),
+            
+            // Add helpful tips for face detection errors
+            if (isFaceError) ...[
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.amber.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.amber.shade200),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.lightbulb_outline,
+                          color: Colors.amber.shade600,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Tips for better results:',
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                color: Colors.amber.shade800,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ...['Take a selfie in natural daylight', 'Face the light source directly', 'Make sure your face fills most of the frame', 'Remove sunglasses or face coverings'].map((tip) => 
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 4,
+                              height: 4,
+                              margin: const EdgeInsets.only(right: 8, top: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.amber.shade600,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                tip,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.amber.shade700,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            
             const SizedBox(height: 24),
             SoftButton(
               onPressed: () {
-                Provider.of<ColorProvider>(context, listen: false).resetCurrentAnalysis();
+                Provider.of<ColorProvider>(context, listen: false).resetForNewInput();
                 setState(() {
                   _imageBytes = null;
+                  _fadeController.reset();
+                  _fadeController.forward();
                 });
               },
-              backgroundColor: AppTheme.strongMauve,
+              backgroundColor: isFaceError ? Colors.amber.shade600 : AppTheme.strongMauve,
               textColor: Colors.white,
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.refresh, size: 20, color: Colors.white),
-                  SizedBox(width: 8),
+                  Icon(
+                    isFaceError ? Icons.camera_alt_outlined : Icons.refresh, 
+                    size: 20, 
+                    color: Colors.white
+                  ),
+                  const SizedBox(width: 8),
                   Flexible(
                     child: Text(
-                      'Try Again',
-                      style: TextStyle(
+                      isFaceError ? 'Take New Photo' : 'Try Again',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -754,9 +945,11 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
     if (hasError) {
       return SoftButton(
         onPressed: () {
-          Provider.of<ColorProvider>(context, listen: false).resetCurrentAnalysis();
+          Provider.of<ColorProvider>(context, listen: false).resetForNewInput();
           setState(() {
             _imageBytes = null;
+            _fadeController.reset();
+            _fadeController.forward();
           });
         },
         backgroundColor: AppTheme.strongMauve,
@@ -831,10 +1024,12 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
+                    Provider.of<ColorProvider>(context, listen: false).resetForNewInput();
                     setState(() {
                       _imageBytes = null;
+                      _fadeController.reset();
+                      _fadeController.forward();
                     });
-                    Provider.of<ColorProvider>(context, listen: false).resetCurrentAnalysis();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.strongMauve,
@@ -907,6 +1102,7 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
 
   void _analyzeImage() {
     if (_imageBytes != null) {
+      // Show loading immediately since we're about to start analysis
       Provider.of<ColorProvider>(context, listen: false)
         .analyzePersonalColorType(_imageBytes!);
       _slideController.reset();
@@ -938,5 +1134,114 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
         ),
       );
     }
+  }
+  
+  // Show image source selection bottom sheet
+  void _showImageSourceSelection() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext sheetContext) { // Renamed context to avoid conflict
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 8),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Choose Image Source',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: AppTheme.textPrimaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _SourceOptionButton(
+                    icon: Icons.camera_alt,
+                    title: 'Camera',
+                    onTap: () {
+                      Navigator.pop(sheetContext); // Use sheetContext here
+                      _pickImageFromCamera();
+                    },
+                  ),
+                  _SourceOptionButton(
+                    icon: Icons.photo_library,
+                    title: 'Gallery',
+                    onTap: () {
+                      Navigator.pop(sheetContext); // Use sheetContext here
+                      _pickImage();
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
+        );
+      },
+    );
+  }
+} // This closes _ColorAnalysisScreenState
+
+class _SourceOptionButton extends StatelessWidget {
+  const _SourceOptionButton({
+    Key? key,
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  }) : super(key: key);
+
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: AppTheme.primaryColor.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: AppTheme.primaryColor,
+              size: 30,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: TextStyle(
+              color: AppTheme.textPrimaryColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -24,9 +24,52 @@ class GeminiService {
     );
   }
 
+  // Check if image contains a clearly visible face
+  Future<bool> validateFaceInImage(Uint8List imageBytes) async {
+    try {
+      final prompt = '''
+        Analyze this image and determine if it contains a clearly visible human face suitable for color analysis.
+        
+        Return ONLY "true" if:
+        - There is a clear, unobstructed human face
+        - The face takes up a reasonable portion of the image
+        - Facial features (eyes, skin tone) are clearly visible
+        - The lighting allows for accurate color analysis
+        
+        Return ONLY "false" if:
+        - No human face is visible
+        - The image contains animals, landscapes, objects, etc.
+        - The face is too small, blurry, or poorly lit
+        - Multiple faces are present
+        - Face is heavily obstructed by accessories
+        
+        Respond with only "true" or "false".
+      ''';
+
+      final content = [
+        Content.text(prompt),
+        Content.data('image/jpeg', imageBytes),
+      ];
+
+      final response = await _model.generateContent(content);
+      final responseText = response.text?.trim().toLowerCase();
+      
+      return responseText == 'true';
+    } catch (e) {
+      // If validation fails, assume it's not a suitable face image
+      return false;
+    }
+  }
+
   // Analyze selfie and generate personal color type
   Future<ColorAnalysis> analyzePersonalColorType(Uint8List imageBytes) async {
     try {
+      // First validate that the image contains a suitable face
+      final hasSuitableFace = await validateFaceInImage(imageBytes);
+      if (!hasSuitableFace) {
+        throw Exception('Please upload a clear photo of your face. Make sure your face is clearly visible and well-lit for accurate color analysis.');
+      }
+
       final prompt = '''
         Analyze the user's selfie and return their seasonal color type, 
         matching color palette (in HEX), and styling advice. 

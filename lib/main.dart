@@ -11,12 +11,8 @@ import 'models/color_meaning.dart';
 import 'models/color_palette.dart';
 import 'providers/color_provider.dart';
 import 'providers/onboarding_provider.dart';
-import 'screens/collection_screen.dart';
-import 'screens/color_analysis_screen.dart';
-import 'screens/color_psychology_screen.dart';
-import 'screens/home_screen.dart';
 import 'screens/onboarding_screen.dart';
-import 'screens/palette_generator_screen.dart';
+import 'screens/main_navigation_screen.dart';
 import 'services/gemini_service.dart';
 import 'services/storage_service.dart';
 import 'theme/app_theme.dart';
@@ -92,14 +88,14 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: AppTheme.getThemeData(),
             home: onboardingProvider.onboardingComplete
-                ? const HomeScreen()
+                ? const MainNavigationScreen()
                 : const OnboardingScreen(),
             routes: {
-              '/home': (context) => const HomeScreen(),
-              '/color-analysis': (context) => const ColorAnalysisScreen(),
-              '/palette-generator': (context) => const PaletteGeneratorScreen(),
-              '/color-psychology': (context) => const ColorPsychologyScreen(),
-              '/collection': (context) => const CollectionScreen(),
+              '/home': (context) => const MainNavigationScreen(initialIndex: MainNavigationScreen.homeTab),
+              '/color-analysis': (context) => const MainNavigationScreen(initialIndex: MainNavigationScreen.analysisTab),
+              '/palette-generator': (context) => const MainNavigationScreen(initialIndex: MainNavigationScreen.paletteTab),
+              '/color-psychology': (context) => const MainNavigationScreen(initialIndex: MainNavigationScreen.psychologyTab),
+              '/collection': (context) => const MainNavigationScreen(initialIndex: MainNavigationScreen.collectionTab),
             },
           );
         },

@@ -162,15 +162,31 @@ class ColorProvider extends ChangeNotifier {
   // Reset current items
   void resetCurrentAnalysis() {
     _currentAnalysis = null;
+    _status = AnalysisStatus.idle;
+    _errorMessage = null;
     notifyListeners();
   }
   
   void resetCurrentPalette() {
     _currentPalette = null;
+    _status = AnalysisStatus.idle;
+    _errorMessage = null;
     notifyListeners();
   }
   
   void resetCurrentMeaning() {
+    _currentMeaning = null;
+    _status = AnalysisStatus.idle;
+    _errorMessage = null;
+    notifyListeners();
+  }
+  
+  // Helper to reset state and prepare for a new input
+  void resetForNewInput() {
+    _status = AnalysisStatus.idle;
+    _errorMessage = null;
+    _currentAnalysis = null;
+    _currentPalette = null;
     _currentMeaning = null;
     notifyListeners();
   }
