@@ -7,6 +7,7 @@ import '../models/color_palette.dart';
 import '../providers/color_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/soft_card.dart';
+import '../widgets/full_screen_color_preview.dart';
 
 class CollectionScreen extends StatefulWidget {
   const CollectionScreen({Key? key}) : super(key: key);
@@ -234,18 +235,96 @@ class _CollectionScreenState extends State<CollectionScreen> with SingleTickerPr
                   itemBuilder: (context, index) {
                     final colorHex = analysis.primaryColors[index];
                     final color = _hexToColor(colorHex);
-                    return Container(
-                      width: 40,
-                      height: 40,
-                      margin: const EdgeInsets.only(right: 8),
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius: BorderRadius.circular(8),
+                    return GestureDetector(
+                      onTap: () => _showFullScreenColorBasic(context, color, colorHex),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        margin: const EdgeInsets.only(right: 8),
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.fullscreen,
+                            color: color.computeLuminance() > 0.5 
+                                ? Colors.black26 
+                                : Colors.white38,
+                            size: 12,
+                          ),
+                        ),
                       ),
                     );
                   },
                 ),
               ),
+              
+              // Makeup Color Palette
+              if (analysis.makeupColors != null && analysis.makeupColors!.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Text(
+                      'Makeup Palette',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.face_retouching_natural,
+                      size: 16,
+                      color: AppTheme.strongMauve,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 40,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: analysis.makeupColors!.length,
+                    itemBuilder: (context, index) {
+                      final makeupColor = analysis.makeupColors![index];
+                      final color = _hexToColor(makeupColor.color);
+                      return GestureDetector(
+                        onTap: () => _showFullScreenColorMakeup(
+                          context, 
+                          color, 
+                          makeupColor.color, 
+                          makeupColor.usage, 
+                          makeupColor.description,
+                        ),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          margin: const EdgeInsets.only(right: 8),
+                          decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: AppTheme.strongMauve.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              makeupColor.usage.substring(0, 1),
+                              style: TextStyle(
+                                color: color.computeLuminance() > 0.5 
+                                    ? Colors.black87 
+                                    : Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+              
               const SizedBox(height: 16),
               Text(
                 'Saved on ${_formatDate(analysis.createdAt)}',
@@ -434,6 +513,44 @@ class _CollectionScreenState extends State<CollectionScreen> with SingleTickerPr
           ],
         );
       },
+    );
+  }
+
+  // Show full screen color preview for basic colors
+  void _showFullScreenColorBasic(
+    BuildContext context,
+    Color color,
+    String hexCode,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FullScreenColorPreview(
+          color: color,
+          hexCode: hexCode,
+          usage: "Perfect Color",
+          description: "This color complements your skin tone perfectly. Use it for clothing, accessories, or makeup to enhance your natural beauty.",
+        ),
+      ),
+    );
+  }
+
+  // Show full screen color preview for makeup colors
+  void _showFullScreenColorMakeup(
+    BuildContext context,
+    Color color,
+    String hexCode,
+    String usage,
+    String description,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FullScreenColorPreview(
+          color: color,
+          hexCode: hexCode,
+          usage: usage,
+          description: description,
+        ),
+      ),
     );
   }
   
