@@ -8,6 +8,7 @@ import '../providers/color_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/chat_bubble.dart';
 import '../widgets/soft_card.dart';
+import '../widgets/full_screen_color_preview.dart';
 
 class PaletteGeneratorScreen extends StatefulWidget {
   const PaletteGeneratorScreen({Key? key}) : super(key: key);
@@ -621,40 +622,55 @@ class _PaletteGeneratorScreenState extends State<PaletteGeneratorScreen>
                           scale: 0.8 + (0.2 * animValue),
                           child: Opacity(
                             opacity: animValue,
-                            child: Container(
-                              color: color,
-                              height: 120,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    width: double.infinity,
-                                    color: Colors.black.withOpacity(0.15),
-                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          height: 4,
-                                          width: 20,
-                                          margin: const EdgeInsets.only(bottom: 4),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.5),
-                                            borderRadius: BorderRadius.circular(2),
-                                          ),
+                            child: GestureDetector(
+                              onTap: () => _showFullScreenColorPalette(context, color, colorHex),
+                              child: Container(
+                                color: color,
+                                height: 120,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    // Full screen hint icon
+                                    Expanded(
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.fullscreen,
+                                          color: _isLightColor(color) 
+                                              ? Colors.black.withOpacity(0.26) 
+                                              : Colors.white.withOpacity(0.26),
+                                          size: 20,
                                         ),
-                                        Text(
-                                          colorHex.toUpperCase(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: _isLightColor(color) ? AppTheme.textPrimaryColor : Colors.white,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    Container(
+                                      width: double.infinity,
+                                      color: Colors.black.withOpacity(0.15),
+                                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            height: 4,
+                                            width: 20,
+                                            margin: const EdgeInsets.only(bottom: 4),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white.withOpacity(0.5),
+                                              borderRadius: BorderRadius.circular(2),
+                                            ),
+                                          ),
+                                          Text(
+                                            colorHex.toUpperCase(),
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: _isLightColor(color) ? AppTheme.textPrimaryColor : Colors.white,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -797,6 +813,24 @@ class _PaletteGeneratorScreenState extends State<PaletteGeneratorScreen>
       hexColor = 'FF' + hexColor;
     }
     return Color(int.parse(hexColor, radix: 16));
+  }
+
+  // Show full screen color preview for palette colors
+  void _showFullScreenColorPalette(
+    BuildContext context,
+    Color color,
+    String hexCode,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FullScreenColorPreview(
+          color: color,
+          hexCode: hexCode,
+          usage: "Palette Color",
+          description: "This color is part of your generated palette. Use it in your design projects, branding, or creative work to create harmonious color schemes.",
+        ),
+      ),
+    );
   }
 
   bool _isLightColor(Color color) {

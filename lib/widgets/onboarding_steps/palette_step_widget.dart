@@ -6,7 +6,7 @@ class PaletteStepWidget extends StatelessWidget {
   final OnboardingStep stepData;
   final Gradient sectionGradient;
   // Using one of the available girl images, or a placeholder
-  final String imagePath = 'assets/images/girl1.jpg'; // Update if you have a more specific image
+  final String imagePath = 'assets/images/girl4.jpg'; // Update if you have a more specific image
 
   const PaletteStepWidget({
     Key? key,

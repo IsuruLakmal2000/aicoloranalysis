@@ -20,7 +20,7 @@ class StyleStepWidget extends StatelessWidget {
       children: [
         Positioned.fill(
           child: Image.asset(
-            'assets/images/girl1.jpg', // Using girl1.jpg for style step
+            'assets/images/girl6.jpg', // Using girl1.jpg for style step
             fit: BoxFit.cover,
           ),
         ),
@@ -137,7 +137,7 @@ class StyleStepWidget extends StatelessWidget {
               Text(
                 stepData.description,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withOpacity(0.8), // Adjusted for contrast
+                      color: Colors.white.withOpacity(1), // Adjusted for contrast
                       height: 1.4,
                        shadows: [
                         Shadow(
@@ -184,7 +184,7 @@ class StyleStepWidget extends StatelessWidget {
             ),
             child: Icon(
               icon,
-              color: gradient.colors.first, // Use gradient color
+              color: Colors.white, // Changed to white for better visibility
               size: 20,
             ),
           ),
@@ -200,7 +200,7 @@ class StyleStepWidget extends StatelessWidget {
           Text(
             subtitle,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.white.withOpacity(0.7), // Adjusted for contrast
+                  color: Colors.white.withOpacity(1), // Adjusted for contrast
                   fontSize: 10,
                 ),
             textAlign: TextAlign.center,

@@ -72,13 +72,21 @@ class GeminiService {
 
       final prompt = '''
         Analyze the user's selfie and return their seasonal color type, 
-        matching color palette (in HEX), and styling advice. 
+        expanded matching color palette (10-12 colors in HEX), makeup colors with specific usage guidance, and styling advice. 
         Respond in JSON format with the following structure:
         {
           "season_type": "Summer", 
-          "primary_colors": ["#E3DFFF", "#BFD4E7", "#A1C2DD"],
+          "primary_colors": ["#E3DFFF", "#BFD4E7", "#A1C2DD", "#95A5A6", "#D5DBDB", "#85C1E9", "#AED6F1", "#A9CCE3", "#D6EAF8", "#EBF5FB", "#F8F9FA", "#FADBD8"],
+          "makeup_colors": [
+            {"color": "#F1948A", "usage": "Blush", "description": "Perfect for adding a natural flush to your cheeks"},
+            {"color": "#EC7063", "usage": "Lipstick", "description": "A beautiful everyday lip color that complements your skin tone"},
+            {"color": "#D7BDE2", "usage": "Eyeshadow", "description": "Ideal for creating soft, romantic eye looks"},
+            {"color": "#BB8FCE", "usage": "Eyeliner", "description": "A softer alternative to black liner that enhances your eyes"},
+            {"color": "#A569BD", "usage": "Highlighter", "description": "Adds a subtle glow to your cheekbones and inner corners"},
+            {"color": "#8E44AD", "usage": "Contour", "description": "Perfect for defining your features naturally"}
+          ],
           "description": "You belong to the Summer season, best suited for cool, soft colors. These enhance your calm and elegant tone.",
-          "style_tips": ["Pastel shades look great on you.", "Avoid harsh blacks or bright oranges."]
+          "style_tips": ["Pastel shades look great on you.", "Avoid harsh blacks or bright oranges.", "Try soft pinks and blues for makeup.", "Silver jewelry complements your coloring better than gold."]
         }
       ''';
 

@@ -8,6 +8,7 @@ import '../providers/color_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/soft_button.dart';
 import '../widgets/soft_card.dart';
+import '../widgets/full_screen_color_preview.dart';
 
 class ColorAnalysisScreen extends StatefulWidget {
   const ColorAnalysisScreen({Key? key}) : super(key: key);
@@ -806,10 +807,10 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 0.8,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
+                        crossAxisCount: 4, // Changed from 3 to 4 for more colors
+                        childAspectRatio: 0.75, // Slightly adjusted for better proportions
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
                       ),
                       itemCount: analysis.primaryColors!.length,
                       itemBuilder: (context, index) {
@@ -817,7 +818,8 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
                         final colorValue = _hexToColor(color);
                         
                         return GestureDetector(
-                          onTap: () => _copyToClipboard(color, context),
+                          onTap: () => _showFullScreenColorBasic(context, colorValue, color),
+                          onLongPress: () => _copyToClipboard(color, context),
                           child: Column(
                             children: [
                               // Color box
@@ -834,16 +836,28 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
                                         offset: const Offset(0, 4),
                                       ),
                                     ],
+                                    border: Border.all(
+                                      color: AppTheme.strongMauve.withOpacity(0.2),
+                                      width: 1,
+                                    ),
                                   ),
-                                  
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.fullscreen,
+                                      color: colorValue.computeLuminance() > 0.5 
+                                          ? Colors.black38 
+                                          : Colors.white38,
+                                      size: 18,
+                                    ),
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              // Copy icon
+                              // Simple tap hint
                               Icon(
-                                Icons.copy_outlined,
-                                size: 16,
-                                color: AppTheme.textSecondaryColor.withOpacity(0.7),
+                                Icons.touch_app,
+                                size: 12,
+                                color: AppTheme.textSecondaryColor.withOpacity(0.5),
                               ),
                               const SizedBox(height: 4),
                               // Hex code below
@@ -857,6 +871,200 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
                                 textAlign: TextAlign.center,
                               ),
                             ],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 24),
+          ],
+          
+          // Makeup Color Palette
+          if (analysis.makeupColors != null && analysis.makeupColors!.isNotEmpty) ...[
+            SoftCard(
+              backgroundColor: Colors.white,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [AppTheme.strongMauve, AppTheme.accentColor],
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Makeup Color Palette',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: AppTheme.textSecondaryColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.face_retouching_natural,
+                          size: 20,
+                          color: AppTheme.strongMauve,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Tap any color to see it full screen and get specific application guidance',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppTheme.textSecondaryColor.withOpacity(0.8),
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // 2 columns for makeup colors for better description display
+                        childAspectRatio: 1.2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: analysis.makeupColors!.length,
+                      itemBuilder: (context, index) {
+                        final makeupColor = analysis.makeupColors![index];
+                        final colorValue = _hexToColor(makeupColor.color);
+                        
+                        return GestureDetector(
+                          onTap: () => _showFullScreenColor(
+                            context,
+                            colorValue,
+                            makeupColor.color,
+                            makeupColor.usage,
+                            makeupColor.description,
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppTheme.strongMauve.withOpacity(0.3),
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: colorValue.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                // Color preview with usage label
+                                Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: colorValue,
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15),
+                                      ),
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        // Usage label overlay
+                                        Positioned(
+                                          top: 8,
+                                          left: 8,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black.withOpacity(0.6),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            child: Text(
+                                              makeupColor.usage,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        // Full screen hint
+                                        const Positioned(
+                                          bottom: 8,
+                                          right: 8,
+                                          child: Icon(
+                                            Icons.fullscreen,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // Information section
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(15),
+                                        bottomRight: Radius.circular(15),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Hex code
+                                        Text(
+                                          makeupColor.color.toUpperCase(),
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                            color: AppTheme.strongMauve,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        // Description
+                                        Expanded(
+                                          child: Text(
+                                            makeupColor.description,
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                              color: AppTheme.textSecondaryColor,
+                                              fontSize: 10,
+                                              height: 1.3,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -1134,6 +1342,44 @@ class _ColorAnalysisScreenState extends State<ColorAnalysisScreen>
         ),
       );
     }
+  }
+
+  // Show full screen color preview
+  void _showFullScreenColor(
+    BuildContext context,
+    Color color,
+    String hexCode,
+    String usage,
+    String description,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FullScreenColorPreview(
+          color: color,
+          hexCode: hexCode,
+          usage: usage,
+          description: description,
+        ),
+      ),
+    );
+  }
+
+  // Show full screen color preview for basic colors
+  void _showFullScreenColorBasic(
+    BuildContext context,
+    Color color,
+    String hexCode,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FullScreenColorPreview(
+          color: color,
+          hexCode: hexCode,
+          usage: "Perfect Color",
+          description: "This color complements your skin tone perfectly. Use it for clothing, accessories, or makeup to enhance your natural beauty.",
+        ),
+      ),
+    );
   }
   
   // Show image source selection bottom sheet

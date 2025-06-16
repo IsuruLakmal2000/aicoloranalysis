@@ -54,7 +54,7 @@ class _FinalStepWidgetState extends State<FinalStepWidget> {
       children: [
         Positioned.fill(
           child: Image.asset(
-            'assets/images/girl2.png', // Placeholder for final step
+            'assets/images/girl10.jpg', // Placeholder for final step
             fit: BoxFit.cover,
           ),
         ),
@@ -122,7 +122,7 @@ class _FinalStepWidgetState extends State<FinalStepWidget> {
               Text(
                 widget.stepData.subtitle,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: widget.sectionGradient.colors.first.withOpacity(0.9), // Adjusted for contrast
+                      color:Colors.white.withOpacity(0.9), // Adjusted for contrast
                       fontWeight: FontWeight.w500,
                       shadows: [
                         Shadow(

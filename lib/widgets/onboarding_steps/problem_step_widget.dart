@@ -6,7 +6,7 @@ class ProblemStepWidget extends StatelessWidget {
   final OnboardingStep stepData;
   final Gradient sectionGradient;
   // Using an existing image from your assets folder
-  final String imagePath = 'assets/images/girl3.jpg'; // Updated to use existing image
+  final String imagePath = 'assets/images/girl1.jpg'; // Updated to use existing image
 
   const ProblemStepWidget({
     Key? key,
@@ -88,29 +88,32 @@ class ProblemStepWidget extends StatelessWidget {
               
               const SizedBox(height: 32),
               
-              // Before/After visual - Retaining original card styling for clarity
+              // Before/After visual - After container larger for emphasis
               Row(
                 children: [
                   Expanded(
+                    flex: 2, // Smaller flex for Before container
                     child: Container(
-                      padding: const EdgeInsets.all(20),
+                      height: 160, // Smaller height for Before
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.red.shade50.withOpacity(0.9), // Slight opacity to hint background
-                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.red.shade50.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(16),
                         border: Border.all(color: Colors.red.shade100.withOpacity(0.8)),
-                         boxShadow: [
+                        boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.sentiment_dissatisfied, 
-                               color: Colors.red.shade400, size: 32),
-                          const SizedBox(height: 12),
+                               color: Colors.red.shade400, size: 28),
+                          const SizedBox(height: 10),
                           Text(
                             'Before',
                             style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -118,12 +121,13 @@ class ProblemStepWidget extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 6),
                           Text(
                             'Guessing colors\nWasted money\nLack confidence',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.red.shade600,
-                              height: 1.3,
+                              height: 1.2,
+                              fontSize: 11,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -133,51 +137,55 @@ class ProblemStepWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
+                    flex: 3, // Larger flex for After container
                     child: Container(
-                      padding: const EdgeInsets.all(20),
+                      height: 200, // Larger height for After
+                      padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient( // Original gradient for "After" card
+                        gradient: LinearGradient(
                           colors: [
-                            sectionGradient.colors.first.withOpacity(0.85),
-                            sectionGradient.colors.last.withOpacity(0.75),
+                            sectionGradient.colors.first.withOpacity(0.9),
+                            sectionGradient.colors.last.withOpacity(0.8),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: sectionGradient.colors.first.withOpacity(0.2),
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
+                            color: sectionGradient.colors.first.withOpacity(0.3),
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
                           ),
                         ],
                       ),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.sentiment_very_satisfied, 
                                color: sectionGradient.colors.first.computeLuminance() > 0.5 
                                       ? AppTheme.textPrimaryColor.withOpacity(0.8) 
-                                      : Colors.white.withOpacity(0.9), // Icon color contrast with gradient
-                               size: 32),
-                          const SizedBox(height: 12),
+                                      : Colors.white.withOpacity(0.9),
+                               size: 36),
+                          const SizedBox(height: 14),
                           Text(
                             'After',
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               color: sectionGradient.colors.first.computeLuminance() > 0.5 
                                      ? AppTheme.textPrimaryColor 
-                                     : Colors.white, // Text color contrast
-                              fontWeight: FontWeight.w600,
+                                     : Colors.white,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           Text(
                             'Perfect colors\nSmart shopping\nFeel amazing',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: sectionGradient.colors.first.computeLuminance() > 0.5 
                                      ? AppTheme.textSecondaryColor 
-                                     : Colors.white.withOpacity(0.85), // Text color contrast
-                              height: 1.3,
+                                     : Colors.white.withOpacity(0.9),
+                              height: 1.4,
+                              fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -193,7 +201,7 @@ class ProblemStepWidget extends StatelessWidget {
               Text(
                 stepData.description,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withOpacity(0.85), // Adjusted for contrast
+                      color: Colors.white.withOpacity(1), // Adjusted for contrast
                       height: 1.4,
                       shadows: [
                         Shadow(

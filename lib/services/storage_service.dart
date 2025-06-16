@@ -93,4 +93,20 @@ class StorageService {
     final box = Hive.box<ColorPalette>(colorPaletteBoxName);
     await box.delete(id);
   }
+
+  // Clear all saved data (useful for structure updates)
+  Future<void> clearAllColorAnalyses() async {
+    final box = Hive.box<ColorAnalysis>(colorAnalysisBoxName);
+    await box.clear();
+  }
+
+  Future<void> clearAllData() async {
+    final analysisBox = Hive.box<ColorAnalysis>(colorAnalysisBoxName);
+    final meaningBox = Hive.box<ColorMeaning>(colorMeaningBoxName);
+    final paletteBox = Hive.box<ColorPalette>(colorPaletteBoxName);
+    
+    await analysisBox.clear();
+    await meaningBox.clear();
+    await paletteBox.clear();
+  }
 }

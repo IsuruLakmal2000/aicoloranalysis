@@ -7,7 +7,7 @@ class PsychologyStepWidget extends StatelessWidget {
   final Gradient sectionGradient;
   final IconData iconData;
   // Placeholder image, update as needed
-  final String imagePath = 'assets/images/girl2.png'; // Or use one of the girl images e.g. girl1.jpg
+  final String imagePath = 'assets/images/girl5.jpg'; // Or use one of the girl images e.g. girl1.jpg
 
   const PsychologyStepWidget({
     Key? key,

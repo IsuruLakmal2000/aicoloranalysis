@@ -72,9 +72,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: SafeArea(
-                  child: _buildBottomNavigation(context, onboardingProvider),
-                ),
+                child: _buildBottomNavigation(context, onboardingProvider),
               ),
             ],
           ),
@@ -140,7 +138,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   Widget _buildBottomNavigation(BuildContext context, OnboardingProvider provider) {
     bool isLastStep = provider.currentStep == provider.totalSteps - 1;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    
     return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.15 + bottomPadding,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -153,7 +155,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 16.0 + bottomPadding),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

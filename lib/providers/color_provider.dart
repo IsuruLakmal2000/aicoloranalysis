@@ -28,7 +28,40 @@ class ColorProvider extends ChangeNotifier {
     required StorageService storageService,
   }) : _geminiService = geminiService,
        _storageService = storageService {
-    _loadSavedItems();
+    _initializeProvider();
+  }
+
+  // Initialize and migrate data if needed
+  Future<void> _initializeProvider() async {
+    // Clear old data structure to ensure compatibility with makeup colors
+    await _migrateDataStructure();
+    await _loadSavedItems();
+  }
+
+  // Migrate old data structure to support makeup colors
+  Future<void> _migrateDataStructure() async {
+    try {
+      final existingAnalyses = _storageService.getAllColorAnalyses();
+      bool needsMigration = false;
+      
+      // Check if any existing analyses lack makeup colors structure
+      for (final analysis in existingAnalyses) {
+        if (analysis.makeupColors == null) {
+          needsMigration = true;
+          break;
+        }
+      }
+      
+      // If migration is needed, clear old incompatible data
+      if (needsMigration) {
+        await _storageService.clearAllColorAnalyses();
+        print('Migrated color analysis data structure to support makeup colors');
+      }
+    } catch (e) {
+      // If there's any error, clear and start fresh
+      await _storageService.clearAllColorAnalyses();
+      print('Cleared color analysis data due to structure change');
+    }
   }
   
   // Getters
@@ -123,6 +156,21 @@ class ColorProvider extends ChangeNotifier {
     await _storageService.deleteColorMeaning(id);
     await _loadSavedMeanings();
   }
+
+  // Clear saved data (useful for structure updates)
+  Future<void> clearAllSavedData() async {
+    await _storageService.clearAllData();
+    _savedAnalyses.clear();
+    _savedPalettes.clear();
+    _savedMeanings.clear();
+    notifyListeners();
+  }
+
+  Future<void> clearSavedAnalyses() async {
+    await _storageService.clearAllColorAnalyses();
+    _savedAnalyses.clear();
+    notifyListeners();
+  }
   
   // Helper methods
   void _setLoading() {
@@ -145,7 +193,7 @@ class ColorProvider extends ChangeNotifier {
   }
   
   Future<void> _loadSavedAnalyses() async {
-    _savedAnalyses = await _storageService.getAllColorAnalyses();
+    _savedAnalyses = _storageService.getAllColorAnalyses();
     notifyListeners();
   }
   

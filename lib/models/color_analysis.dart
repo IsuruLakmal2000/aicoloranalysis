@@ -2,6 +2,40 @@ import 'package:hive/hive.dart';
 
 part 'color_analysis.g.dart';
 
+@HiveType(typeId: 4)
+class MakeupColor {
+  @HiveField(0)
+  final String color;
+
+  @HiveField(1)
+  final String usage;
+
+  @HiveField(2)
+  final String description;
+
+  MakeupColor({
+    required this.color,
+    required this.usage,
+    required this.description,
+  });
+
+  factory MakeupColor.fromJson(Map<String, dynamic> json) {
+    return MakeupColor(
+      color: json['color'],
+      usage: json['usage'],
+      description: json['description'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'color': color,
+      'usage': usage,
+      'description': description,
+    };
+  }
+}
+
 @HiveType(typeId: 1)
 class ColorAnalysis {
   @HiveField(0)
@@ -22,6 +56,9 @@ class ColorAnalysis {
   @HiveField(5)
   final DateTime createdAt;
 
+  @HiveField(6)
+  final List<MakeupColor>? makeupColors;
+
   ColorAnalysis({
     required this.id,
     required this.seasonType,
@@ -29,6 +66,7 @@ class ColorAnalysis {
     required this.description,
     required this.styleTips,
     required this.createdAt,
+    this.makeupColors,
   });
 
   factory ColorAnalysis.fromJson(Map<String, dynamic> json) {
@@ -39,6 +77,9 @@ class ColorAnalysis {
       description: json['description'],
       styleTips: List<String>.from(json['style_tips']),
       createdAt: DateTime.now(),
+      makeupColors: json['makeup_colors'] != null 
+          ? (json['makeup_colors'] as List).map((item) => MakeupColor.fromJson(item)).toList()
+          : null,
     );
   }
 
@@ -50,6 +91,7 @@ class ColorAnalysis {
       'description': description,
       'style_tips': styleTips,
       'created_at': createdAt.toIso8601String(),
+      'makeup_colors': makeupColors?.map((item) => item.toJson()).toList(),
     };
   }
 }

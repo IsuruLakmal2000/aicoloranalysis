@@ -43,6 +43,9 @@ void main() async {
   if (!Hive.isAdapterRegistered(3)) {
     Hive.registerAdapter(ColorMeaningAdapter());
   }
+  if (!Hive.isAdapterRegistered(4)) {
+    Hive.registerAdapter(MakeupColorAdapter());
+  }
   
   // Open Hive boxes
   await Hive.openBox<ColorAnalysis>('color_analyses');
